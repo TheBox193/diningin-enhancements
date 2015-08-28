@@ -1,10 +1,11 @@
 /**
-	Jonathan Stassen - June 2015
-	https://github.com/TheBox193/diningin-enhancements
-	Feature requests: send a Slack, Email, or PR
-	A quick set of enhancmetns to dingingin.com
-	Eat it up!
-**/
+ * @license
+ * @name jquery.otherdropdown
+ * @description Feature requests: send a Slack, Email, or PR. A quick set of enhancmetns to dingingin.com Eat it up!
+ * @version 1.4.1
+ * @author Jonathan Stassen <jstassen.com>
+ * @see https://github.com/TheBox193/diningin-enhancements
+ */
 
 // var TAX = 0.1248;
 var TAX = 0.105;
@@ -15,10 +16,6 @@ function menuHighlight() {
 		var t=$(this).closest("tr"),
 		price = getPriceByEl( t ),
 		priceWithTax = Number( price * ( 1 + TAX ) ).toFixed(2);
-		id = getMenuItemIdByTr( t );
-
-		addTotalCost(priceWithTax, id);
-
 		if( priceWithTax <= ( Number(options.doHighlightUnderValue) || 11 ) )
 			t.css("background-color","lightblue");
 	});
@@ -57,14 +54,6 @@ function getMenuItemElById(id) {
 	return $('#'+id).closest("tr");
 }
 
-function getMenuItemIdByTr($tr) {
-	return $tr.find('#DIVDescription span:first').attr('id');
-}
-
-function addTotalCost(cost, id) {
-	getMenuItemElById(id).append('<td valign="top"><span class="menu-price">$' + cost + '</span></td>')
-}
-
 function showLoved() {
 	var loved = getLoved();
 	$.each(loved, function(index, id) {
@@ -90,6 +79,7 @@ function removeExtraneousElements() {
 		// "#MenuPageMenu li:contains('ZAGAT')", // Zagat
 		// "#MenuPageMenu li:contains('TIMES')", // Restraunt Times
 		"#RestMenu td:contains('no prices')", // no prices pdf
+		"#MostedLoved", // Most loved
 
 
 		/** Checkout */
@@ -100,12 +90,11 @@ function removeExtraneousElements() {
 		".phone_number_email_container_item2 .email-receipts-message", // going green
 		".checkout_left_container_mid_payment_method #menu_delivery_time", // delivery time
 		".checkout_left_container_mid_payment_method #menu_delivery_loc", // delivery location
-		// ".checkout_left_container_mid_payment_method .delivery_instructions_for_driver_container:first", // number of people
-		// ".checkout_left_container_mid_payment_method #select_payment_method_container:contains('following options')", // number of people
+		".checkout_left_container_mid_payment_method .delivery_instructions_for_driver_container:last", // driver instructions (optional)
+		".checkout_left_container_mid_payment_method #select_payment_method_container:contains('following options')", // number of people
 		"#divPaymentContainer span:contains('is this')", // 'what is this'
 		"#CartContainer #ctl01_pnlOrderPaymentMsg", // false positive success before success checkout
 		".tip_coupon_gift_certificates_title", // delivery instructions title
-		"#pnlStepDeliveryInfo .checkout_left_container", // delivery instructions
 
 		/** Footer */
 		"#footer_container", // Footer
