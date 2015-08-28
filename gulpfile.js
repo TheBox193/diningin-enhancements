@@ -11,7 +11,7 @@ gulp.task('default', function() {
 	}))
 	.pipe(gulp.dest('src'));
 
-	return gulp.src(['*', '!./dist/', '!./dist/**'])
+	return gulp.src(['**', '!./node_modules/', '!./node_modules/**', '!./dist/', '!./dist/**'])
     .pipe(zip('diningin.enhancments.zip'))
 	.pipe(gulp.dest('dist'));
 });
