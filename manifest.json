@@ -4,6 +4,7 @@
 	"version": "1.4.2",
 	"permissions": [
 		"storage",
+		"notifications",
 		"*://*.diningin.com/*",
 		"*://diningin.com/*"
 	],
