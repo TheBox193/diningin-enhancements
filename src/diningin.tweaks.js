@@ -7,6 +7,9 @@
  * @see https://github.com/TheBox193/diningin-enhancements
  */
 
+// Imports
+var moment = require("moment");
+
 // var TAX = 0.1248;
 var TAX = 0.115;
 var options;
@@ -218,13 +221,13 @@ function gfRestaurants() {
 function averageDeliveryTimes() {
 	var rest = $('.mps_grid_table .actionItem');
 
-	$.get(api + 'averages/').then( function(restaurantsTimes) {
+	$.get(api + 'delivery_times/').then( function(restaurantsTimes) {
 		rest.each( function(index, item) {
 			$item = $(item);
 			var data = $item.children('.rdata').text();
 			var data2 = JSON.parse(data.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": '));
 
-			var time = restaurantsTimes[data2.rl];
+			var time = calcAverageDeliveryTime(restaurantsTimes[data2.rl]);
 			if (time) {
 				var timeLabel = $('<div>Average Time:</div>')
 					.css('margin-top', '8px')
@@ -241,6 +244,28 @@ function averageDeliveryTimes() {
 			}
 		});
 	});
+}
+
+function calcAverageDeliveryTime(timestamps) {
+	if (!timestamps || !timestamps.length) {
+		return null;
+	}
+
+	// Convert times to time of day (in minutes) so we can take the average
+	// eg. 1/12/2016 13:45:49 ---> 13:45 ---> 13*60 + 45
+	var timesOfDayMinutes = timestamps.map(function(timestamp) {
+		var timeObj = moment.unix(timestamp);
+		return timeObj.hours()*60 + timeObj.minutes();
+	});
+
+	var averageTimeMinutes = timesOfDayMinutes.reduce(function(total, time) {
+		return total + time;
+	}) / timesOfDayMinutes.length;
+
+	// In moment, minutes bubble up, but add to hours, so we reset hours to 0
+	var averageTimeStr = moment().hours(0).minute(averageTimeMinutes).format("h:mm a");
+
+	return averageTimeStr;
 }
 
 function getVotes() {
